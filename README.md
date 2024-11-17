@@ -8,4 +8,6 @@
 
 개발하실 때는 브랜치 중 Develop 에서 브랜치를 생성한 후 작업하시고 Develop 에 머지해야 할 때는 Pull Request 를 사용해주시기 바랍니다. 
 
-* Pull Requests 할 때 꼭 브랜치를 확인해주시기 바랍니다.
+* Pull Requests 할 때 꼭 브랜치를 확인해주세요
+* Develop 이 업데이트 되었을 경우 꼭 Rebase 해서 작업하는 브랜치 업데이트해주세요
+* Rebase 중 Merge conflict 발생할 경우 말해주세요
