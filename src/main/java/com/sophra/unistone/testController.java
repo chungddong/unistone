@@ -54,7 +54,7 @@ public class testController {
 
         if (usersService.confirmUser(loginUser)) {
             session.setAttribute("user", loginUser); //세션설정
-            return ResponseEntity.ok("로그인 승인");
+            return ResponseEntity.ok("로그인 승인" + "session : " + session.getId());
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("이메일 또는 비밀번호 오류");
         }
