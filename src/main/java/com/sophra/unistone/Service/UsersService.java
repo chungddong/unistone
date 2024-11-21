@@ -17,7 +17,7 @@ public class UsersService {
 
     //회원가입 하는 메서드
     public Users registerUser(Users user) {
-        user.setPasswd(user.getPasswd());
+        //user.setPasswd(user.getPasswd());
         return usersRepository.save(user);
     }
 
