@@ -33,8 +33,8 @@ public class ProjectUser {
     @JoinColumn(name = "project_id", nullable = false)
     private Project project; // Project와의 관계 정의
 
-    @Column(name = "project_name", nullable = true)
-    private String projectName; // 프로젝트 이름 (Optional)
+
+    private String userRole; // 유저 역할
 
     
 }
