@@ -1,8 +1,10 @@
 package com.sophra.unistone;
 
 import com.sophra.unistone.Entity.Project;
+import com.sophra.unistone.Entity.ProjectUser;
 import com.sophra.unistone.Entity.Users;
 import com.sophra.unistone.Repository.ProjectRepository;
+import com.sophra.unistone.Repository.ProjectUserRepository;
 import com.sophra.unistone.Service.UsersService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,9 @@ public class ProjectController {
 
     @Autowired
     private ProjectRepository projectRepository;
+
+    @Autowired
+    private ProjectUserRepository projectUserRepository;
 
     @Autowired
     private UsersService usersService;
@@ -45,8 +50,14 @@ public class ProjectController {
         // 새로운 프로젝트 DB에 저장
         projectRepository.save(newProject);
 
-        // 프로젝트 참가자 유저 저장
+        // 프로젝트 참가자 유저 저장 - 생성한 사람은 관리자
+        ProjectUser projectUser = new ProjectUser();
+        projectUser.setUser(user.get()); // 참가자 유저 정보 연결
+        projectUser.setProject(newProject); // 참가자 프로젝트 정보 연결
+        projectUser.setUserRole("Manager"); // 관리자 역할 부여
 
+        // 새로운 프로젝트 유저 저장 - 관리자
+        projectUserRepository.save(projectUser);
 
         return ResponseEntity.ok("프로젝트 생성 성공");
     }
