@@ -35,7 +35,7 @@ public class ProjectUserService {
      * @return 프로젝트에 참여한 유저 이름 리스트
      */
     public List<String> findAllUserNameByProject(Project project) {
-        return projectUserRepository.findbyProject(project).stream()
+        return projectUserRepository.findByProject(project).stream()
                 .map(projectUser -> projectUser.getUser().getUserName()) // ProjectUser에서 유저 이름 추출
                 .collect(Collectors.toList());
     }
