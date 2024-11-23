@@ -158,4 +158,37 @@ public class ProjectController {
         return ResponseEntity.ok("초대 성공");
     }
 
+
+    // 프로젝트 참가자 목록 가져오기
+    @PostMapping("/api/project/users")
+    public ResponseEntity<?> ListProjectUser(@RequestBody Map<String, Long> requestBody, HttpSession session) {
+
+        Users loginuser = (Users) session.getAttribute("user");
+        Optional<Users> user = usersService.findbyEmail(loginuser.getEmail());
+
+        // 유저 확인
+        if(user.isEmpty()) { return ResponseEntity.badRequest().body("로그인이 필요합니다."); }
+
+        // 요청된 프로젝트 ID 확인
+        Long projectId = requestBody.get("projectId");
+        if (projectId == null) {
+            return ResponseEntity.badRequest().body("유효한 프로젝트 ID가 필요합니다.");
+        }
+
+
+        // 프로젝트 ID로 특정 프로젝트 조회
+        Optional<Project> selectProject = projectService.findProjectById(projectId);
+
+        // 프로젝트 존재 여부 확인
+        if (selectProject.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("프로젝트를 찾을 수 없습니다.");
+        }
+
+        // 모든 참가자 리스트 가져오기
+        List<String> allProjectUserNames = projectUserService.findAllUserNameByProject(selectProject.get());
+
+
+        return ResponseEntity.ok(allProjectUserNames);
+    }
+
 }

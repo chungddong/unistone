@@ -28,4 +28,16 @@ public class ProjectUserService {
                 .collect(Collectors.toList());
     }
 
+
+    /**
+     * 프로젝트로 모든 유저 이름을 반환
+     * @param project 프로젝트 ID
+     * @return 프로젝트에 참여한 유저 이름 리스트
+     */
+    public List<String> findAllUserNameByProject(Project project) {
+        return projectUserRepository.findbyProject(project).stream()
+                .map(projectUser -> projectUser.getUser().getUserName()) // ProjectUser에서 유저 이름 추출
+                .collect(Collectors.toList());
+    }
+
 }
