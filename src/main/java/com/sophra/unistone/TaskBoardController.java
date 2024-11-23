@@ -76,15 +76,12 @@ public class TaskBoardController {
         return ResponseEntity.ok(selectProject.get());
     }
 
-    // TODO : 프로젝트 리스트 요청
+    // TODO : 작업보드 분류 리스트 요청
     @GetMapping("/api/taskboard/status")
     public ResponseEntity<?> ListProject(HttpSession session) {
 
-        Users loginuser = (Users) session.getAttribute("user");
-        Optional<Users> user = usersService.findbyEmail(loginuser.getEmail());
-
         // 유저 확인
-        if(user.isEmpty()) { return ResponseEntity.badRequest().body("로그인이 필요합니다."); }
+        Users user = userCheck.validateLoggedInUser(session);
 
         // TODO : 작업보드 분류 리스트 반환
 
