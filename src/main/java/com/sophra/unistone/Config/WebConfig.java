@@ -1,4 +1,4 @@
-package com.sophra.unistone;
+package com.sophra.unistone.Config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

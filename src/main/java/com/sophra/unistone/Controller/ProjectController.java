@@ -69,6 +69,9 @@ public class ProjectController {
         // 새로운 프로젝트 유저 저장 - 관리자
         projectUserRepository.save(projectUser);
 
+        // TODO : 기본 채팅방(전체) 생성해야함
+
+
         return ResponseEntity.ok("프로젝트 생성 성공");
     }
 

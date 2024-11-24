@@ -1,4 +1,4 @@
-package com.sophra.unistone;
+package com.sophra.unistone.Config;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
