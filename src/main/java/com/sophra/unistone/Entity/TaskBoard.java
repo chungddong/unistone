@@ -1,9 +1,6 @@
 package com.sophra.unistone.Entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,6 +24,9 @@ public class TaskBoard {
     private Date startDate;
     private Date endDate;
 
-    //작업보드 리스트 식별자
+    //작업보드 분류 식별자
+    @ManyToOne
+    @JoinColumn(name = "taskBoardStatus_id", nullable = false)
+    private TaskBoardStatus taskBoardStatus;
 
 }

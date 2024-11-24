@@ -1,4 +1,4 @@
-package com.sophra.unistone;
+package com.sophra.unistone.Controller;
 
 import com.sophra.unistone.DTO.TaskBoardDTO;
 import com.sophra.unistone.Entity.Project;
@@ -8,7 +8,10 @@ import com.sophra.unistone.Entity.Users;
 import com.sophra.unistone.Repository.TaskBoardRepository;
 import com.sophra.unistone.Repository.TaskBoardStatusRepository;
 import com.sophra.unistone.Service.ProjectService;
+import com.sophra.unistone.Service.TaskBoardService;
+import com.sophra.unistone.Service.TaskBoardStatusService;
 import com.sophra.unistone.Service.UsersService;
+import com.sophra.unistone.UserCheck;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,14 +42,18 @@ public class TaskBoardController {
     @Autowired
     private TaskBoardStatusRepository taskBoardStatusRepository;
 
+    @Autowired
+    private TaskBoardService taskBoardService;
+
     // 유저 확인용 클래스
     UserCheck userCheck;
-
+    @Autowired
+    private TaskBoardStatusService taskBoardStatusService;
 
 
     // 작업보드 분류 생성 요청
     @PostMapping("/api/taskboard/status")
-    public ResponseEntity<?> InfoProject(@RequestBody Map<String, String> requestBody, HttpSession session) {
+    public ResponseEntity<?> CreateTaskBoardStatus(@RequestBody Map<String, String> requestBody, HttpSession session) {
 
         // 유저 확인
         Users user = userCheck.validateLoggedInUser(session);
@@ -76,16 +83,22 @@ public class TaskBoardController {
         return ResponseEntity.ok(selectProject.get());
     }
 
-    // TODO : 작업보드 분류 리스트 요청
-    @GetMapping("/api/taskboard/status")
-    public ResponseEntity<?> ListProject(HttpSession session) {
+    // 작업보드 분류 리스트 요청
+    @PostMapping("/api/taskboard/status/list")
+    public ResponseEntity<?> ListTaskBoardStatus(@RequestBody Map<String, Long> requestBody, HttpSession session) {
 
         // 유저 확인
         Users user = userCheck.validateLoggedInUser(session);
 
-        // TODO : 작업보드 분류 리스트 반환
+        // 요청된 프로젝트 ID 확인
+        Long projectId = requestBody.get("projectId");
+        if (projectId == null) {
+            return ResponseEntity.badRequest().body("유효한 프로젝트 ID가 필요합니다.");
+        }
 
-        return ResponseEntity.ok("ㄴㅇㄹ");
+        List<TaskBoardStatus> taskBoardStatus = taskBoardStatusService.getTaskBoardStatusByProjectId(projectId);
+
+        return ResponseEntity.ok(taskBoardStatus);
     }
 
 
@@ -108,20 +121,31 @@ public class TaskBoardController {
         // 요청 날린 TaskBoard
         TaskBoard selectTaskBoard = taskBoardDTO.getTaskBoard();
 
-        // 작업보드상태 추가
-        TaskBoard newTaskBoard = new TaskBoard();
-        newTaskBoard.setTaskName(selectTaskBoard.getTaskName());
-        newTaskBoard.setTaskContent(selectTaskBoard.getTaskContent());
-        newTaskBoard.setStartDate(selectTaskBoard.getStartDate());
-        newTaskBoard.setEndDate(selectTaskBoard.getEndDate());
-
         // 새로운 작업보드 추가
-        taskBoardRepository.save(newTaskBoard);
+        taskBoardRepository.save(selectTaskBoard);
         
         // TODO : 작업보드 사용자 추가 코드 필요함
 
         return ResponseEntity.ok("작업 보드 추가 성공");
     }
+
+
+    // 작업보드 리스트 가져오기
+    @PostMapping("/api/taskboard/list")
+    public ResponseEntity<?> ListTaskBoard(@RequestBody Map<String, Long> requestBody, HttpSession session) {
+        // 유저 확인
+        Users user = userCheck.validateLoggedInUser(session);
+
+        //작업보드 ID 가져오기
+        Long taskBoardStatusID = requestBody.get("taskBoardStatusID");
+
+        // 작업보드 분류 id 로 모든 작업보드 가져오기
+        List<TaskBoard> selectStatusBoards = taskBoardService.getTaskBoardsByStatusId(taskBoardStatusID);
+        
+
+        return ResponseEntity.ok(selectStatusBoards);
+    }
+
 
 
     

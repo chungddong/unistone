@@ -1,4 +1,4 @@
-package com.sophra.unistone;
+package com.sophra.unistone.Controller;
 
 import com.sophra.unistone.Entity.Project;
 import com.sophra.unistone.Entity.ProjectUser;
@@ -8,12 +8,11 @@ import com.sophra.unistone.Repository.ProjectUserRepository;
 import com.sophra.unistone.Service.ProjectService;
 import com.sophra.unistone.Service.ProjectUserService;
 import com.sophra.unistone.Service.UsersService;
+import com.sophra.unistone.UserCheck;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
