@@ -11,5 +11,5 @@ public interface ProjectUserRepository extends JpaRepository<ProjectUser, Long>{
     List<ProjectUser> findByUser(Users user);
 
     //프로젝트로 모든 유저찾기
-    List<ProjectUser> findbyProject(Project project); 
+    List<ProjectUser> findByProject(Project project);
 }

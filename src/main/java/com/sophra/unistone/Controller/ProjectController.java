@@ -1,4 +1,4 @@
-package com.sophra.unistone;
+package com.sophra.unistone.Controller;
 
 import com.sophra.unistone.Entity.Project;
 import com.sophra.unistone.Entity.ProjectUser;
@@ -8,12 +8,11 @@ import com.sophra.unistone.Repository.ProjectUserRepository;
 import com.sophra.unistone.Service.ProjectService;
 import com.sophra.unistone.Service.ProjectUserService;
 import com.sophra.unistone.Service.UsersService;
+import com.sophra.unistone.UserCheck;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -37,18 +36,19 @@ public class ProjectController {
 
     @Autowired
     private ProjectUserService projectUserService;
+
     @Autowired
     private ProjectService projectService;
+
+    // 유저 확인용 클래스
+    UserCheck userCheck;
 
     // 프로젝트 생성 요청 처리
     @PostMapping("/api/project/create")
     public ResponseEntity<?> CreateProject(@RequestBody Project pjQuery, HttpSession session) {
 
-        Users loginuser = (Users) session.getAttribute("user");
-        Optional<Users> user = usersService.findbyEmail(loginuser.getEmail());
-
         // 유저 확인
-        if(user.isEmpty()) { return ResponseEntity.badRequest().body("로그인이 필요합니다."); }
+        Users user = userCheck.validateLoggedInUser(session);
 
         // 새로운 프로젝트 생성
         Project newProject = new Project();
@@ -62,12 +62,15 @@ public class ProjectController {
 
         // 프로젝트 참가자 유저 저장 - 생성한 사람은 관리자
         ProjectUser projectUser = new ProjectUser();
-        projectUser.setUser(user.get()); // 참가자 유저 정보 연결
+        projectUser.setUser(user); // 참가자 유저 정보 연결
         projectUser.setProject(newProject); // 참가자 프로젝트 정보 연결
         projectUser.setUserRole("Manager"); // 관리자 역할 부여
 
         // 새로운 프로젝트 유저 저장 - 관리자
         projectUserRepository.save(projectUser);
+
+        // TODO : 기본 채팅방(전체) 생성해야함
+
 
         return ResponseEntity.ok("프로젝트 생성 성공");
     }
@@ -77,14 +80,11 @@ public class ProjectController {
     @GetMapping("/api/project/list")
     public ResponseEntity<?> ListProject(HttpSession session) {
 
-        Users loginuser = (Users) session.getAttribute("user");
-        Optional<Users> user = usersService.findbyEmail(loginuser.getEmail());
-
         // 유저 확인
-        if(user.isEmpty()) { return ResponseEntity.badRequest().body("로그인이 필요합니다."); }
+        Users user = userCheck.validateLoggedInUser(session);
 
         // 유저의 모든 프로젝트 리스트 반환
-        List<Project> userProjects = projectUserService.findAllProjectsByUser(user.get());
+        List<Project> userProjects = projectUserService.findAllProjectsByUser(user);
 
 
         return ResponseEntity.ok(userProjects);
@@ -94,11 +94,8 @@ public class ProjectController {
     @PostMapping("/api/project/info")
     public ResponseEntity<?> InfoProject(@RequestBody Map<String, Long> requestBody, HttpSession session) {
 
-        Users loginuser = (Users) session.getAttribute("user");
-        Optional<Users> user = usersService.findbyEmail(loginuser.getEmail());
-
         // 유저 확인
-        if(user.isEmpty()) { return ResponseEntity.badRequest().body("로그인이 필요합니다."); }
+        Users user = userCheck.validateLoggedInUser(session);
 
         // 요청된 프로젝트 ID 확인
         Long projectId = requestBody.get("projectId");
@@ -125,11 +122,8 @@ public class ProjectController {
     @PostMapping("/api/project/invite")
     public ResponseEntity<?> InviteProject(@RequestBody Map<String, String> requestBody, HttpSession session) {
 
-        Users loginuser = (Users) session.getAttribute("user");
-        Optional<Users> user = usersService.findbyEmail(loginuser.getEmail());
-
         // 유저 확인
-        if(user.isEmpty()) { return ResponseEntity.badRequest().body("로그인이 필요합니다."); }
+        Users user = userCheck.validateLoggedInUser(session);
 
         // 초대할 유저 이메일과 프로젝트 ID 요청으로 받아와야함
         String inviteUser = requestBody.get("inviteEmail");
@@ -163,11 +157,8 @@ public class ProjectController {
     @PostMapping("/api/project/users")
     public ResponseEntity<?> ListProjectUser(@RequestBody Map<String, Long> requestBody, HttpSession session) {
 
-        Users loginuser = (Users) session.getAttribute("user");
-        Optional<Users> user = usersService.findbyEmail(loginuser.getEmail());
-
         // 유저 확인
-        if(user.isEmpty()) { return ResponseEntity.badRequest().body("로그인이 필요합니다."); }
+        Users user = userCheck.validateLoggedInUser(session);
 
         // 요청된 프로젝트 ID 확인
         Long projectId = requestBody.get("projectId");
