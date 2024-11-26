@@ -1,8 +1,10 @@
 package com.sophra.unistone.Controller;
 
+import com.sophra.unistone.Entity.ChatRoom;
 import com.sophra.unistone.Entity.Project;
 import com.sophra.unistone.Entity.ProjectUser;
 import com.sophra.unistone.Entity.Users;
+import com.sophra.unistone.Repository.ChatRoomRepository;
 import com.sophra.unistone.Repository.ProjectRepository;
 import com.sophra.unistone.Repository.ProjectUserRepository;
 import com.sophra.unistone.Service.ProjectService;
@@ -40,6 +42,9 @@ public class ProjectController {
     @Autowired
     private ProjectService projectService;
 
+    @Autowired
+    private ChatRoomRepository chatRoomRepository;
+
     // 유저 확인용 클래스
     UserCheck userCheck;
 
@@ -69,7 +74,13 @@ public class ProjectController {
         // 새로운 프로젝트 유저 저장 - 관리자
         projectUserRepository.save(projectUser);
 
-        // TODO : 기본 채팅방(전체) 생성해야함
+        // 기본 채팅방(전체) 생성
+        ChatRoom defaultChatRoom = new ChatRoom();
+        defaultChatRoom.setProject(newProject);
+        defaultChatRoom.setName("전체 채팅방");
+        chatRoomRepository.save(defaultChatRoom);
+        
+        //TODO : 기본 채팅방 참여자 생성해야함
 
 
         return ResponseEntity.ok("프로젝트 생성 성공");

@@ -19,10 +19,10 @@ public class ChatRoom {
     @GeneratedValue
     private Long id;
 
-    private String name;
+    private String name; //채팅방 제목
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "project_id", nullable = false)
-    private Project project; // 프로젝트와 연결
+    @ManyToOne
+    @JoinColumn(name = "project_id", nullable = false)  //채팅방 소속 프로젝트
+    private Project project; // 프로젝트와 연결 
 
 }
