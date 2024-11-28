@@ -17,4 +17,6 @@ public class ChatService {
     public List<Chat> getChatsByChatRoomId(Long chatRoomId) {
         return chatRepository.findByChatRoomId(chatRoomId);
     }
+
+
 }
