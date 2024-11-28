@@ -1,12 +1,12 @@
 package com.sophra.unistone.Controller;
 
-import com.sophra.unistone.Entity.Chat;
-import com.sophra.unistone.Entity.ChatRoom;
-import com.sophra.unistone.Entity.Project;
+import com.sophra.unistone.Entity.*;
 import com.sophra.unistone.Repository.ChatRepository;
 import com.sophra.unistone.Repository.ChatRoomRepository;
 import com.sophra.unistone.Repository.ProjectRepository;
+import com.sophra.unistone.Service.ChatRoomService;
 import com.sophra.unistone.Service.ChatService;
+import com.sophra.unistone.UserCheck;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Controller
@@ -30,6 +31,13 @@ public class ChatController {
     @Autowired
     private ChatRoomRepository chatRoomRepository;
 
+    @Autowired
+    private ChatRoomService chatRoomService;
+
+
+    // 유저 확인용 클래스
+    UserCheck userCheck;
+
     //메시지 전송 요청
     @MessageMapping("/send")
     @SendTo("/topic/chatroom/{chatRoomId}")
@@ -41,7 +49,7 @@ public class ChatController {
         return savedMessage;
     }
 
-    //메시지 조회 요청
+    //메시지 조회 요청 - 채팅 가져오기
     /*@GetMapping("/{chatRoomId}")
     public ResponseEntity<List<Chat>> getChats(
             @PathVariable String chatRoomId,
@@ -73,13 +81,35 @@ public class ChatController {
         return ResponseEntity.ok("채팅방 생성 성공");
     }
 
-   /* //채팅방 리스트 가져오기
-    @("/api/chatroom/list")
-    public ResponseEntity<?> GetChatRoomList(HttpSession session) {
 
+    // 채팅방 리스트 요청
+    @PostMapping("/api/chatroom/list")
+    public ResponseEntity<?> ListChatRoom(@RequestBody Map<String, Long> requestBody, HttpSession session) {
 
+        // 유저 확인
+        Users user = userCheck.validateLoggedInUser(session);
 
-    }*/
+        // 요청된 프로젝트 ID 확인
+        Long projectId = requestBody.get("projectId");
+        if (projectId == null) {
+            return ResponseEntity.badRequest().body("유효한 프로젝트 ID가 필요합니다.");
+        }
+
+        List<ChatRoom> chatRooms = chatRoomService.getChatRoomsByProjectId(projectId);
+
+        return ResponseEntity.ok(chatRooms);
+    }
+    
+    
+    //채팅방 참가자 가져오기
+
+    //채팅방 참가자 추가
+
+    //채팅방 공지 생성
+
+    //채팅방 공지 가져오기
+
+    
     
 
 
