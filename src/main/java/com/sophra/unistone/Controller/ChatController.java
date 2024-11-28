@@ -3,9 +3,11 @@ package com.sophra.unistone.Controller;
 import com.sophra.unistone.Entity.*;
 import com.sophra.unistone.Repository.ChatRepository;
 import com.sophra.unistone.Repository.ChatRoomRepository;
+import com.sophra.unistone.Repository.ChatUserRepository;
 import com.sophra.unistone.Repository.ProjectRepository;
 import com.sophra.unistone.Service.ChatRoomService;
 import com.sophra.unistone.Service.ChatService;
+import com.sophra.unistone.Service.ChatUserService;
 import com.sophra.unistone.UserCheck;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +39,10 @@ public class ChatController {
 
     // 유저 확인용 클래스
     UserCheck userCheck;
+    @Autowired
+    private ChatUserRepository chatUserRepository;
+    @Autowired
+    private ChatUserService chatUserService;
 
     //메시지 전송 요청
     @MessageMapping("/send")
@@ -99,13 +105,28 @@ public class ChatController {
 
         return ResponseEntity.ok(chatRooms);
     }
-    
+
     
     //채팅방 참가자 가져오기
+    @GetMapping("/api/chatroom/{chatRoomId}/users")
+    public ResponseEntity<?> getChatUsersByChatRoomId(@PathVariable Long chatRoomId) {
+        List<ChatUser> chatUsers = chatUserService.getChatUsersByChatRoomId(chatRoomId);
 
-    //채팅방 참가자 추가
+        // 필요한 정보만 추출하여 반환
+        List<Map<String, String>> participantList = chatUsers.stream()
+                .map(chatUser -> Map.of(
+                        "userName", chatUser.getUser().getUserName(),
+                        "email", chatUser.getUser().getEmail()
+                ))
+                .toList();
+
+        return ResponseEntity.ok(participantList);
+    }
+
+
 
     //채팅방 공지 생성
+
 
     //채팅방 공지 가져오기
 

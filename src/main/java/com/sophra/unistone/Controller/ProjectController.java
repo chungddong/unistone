@@ -1,12 +1,11 @@
 package com.sophra.unistone.Controller;
 
-import com.sophra.unistone.Entity.ChatRoom;
-import com.sophra.unistone.Entity.Project;
-import com.sophra.unistone.Entity.ProjectUser;
-import com.sophra.unistone.Entity.Users;
+import com.sophra.unistone.Entity.*;
 import com.sophra.unistone.Repository.ChatRoomRepository;
+import com.sophra.unistone.Repository.ChatUserRepository;
 import com.sophra.unistone.Repository.ProjectRepository;
 import com.sophra.unistone.Repository.ProjectUserRepository;
+import com.sophra.unistone.Service.ChatRoomService;
 import com.sophra.unistone.Service.ProjectService;
 import com.sophra.unistone.Service.ProjectUserService;
 import com.sophra.unistone.Service.UsersService;
@@ -45,8 +44,14 @@ public class ProjectController {
     @Autowired
     private ChatRoomRepository chatRoomRepository;
 
+    @Autowired
+    private ChatUserRepository chatUserRepository;
+
+
     // 유저 확인용 클래스
     UserCheck userCheck;
+    @Autowired
+    private ChatRoomService chatRoomService;
 
     // 프로젝트 생성 요청 처리
     @PostMapping("/api/project/create")
@@ -80,8 +85,11 @@ public class ProjectController {
         defaultChatRoom.setName("전체 채팅방");
         chatRoomRepository.save(defaultChatRoom);
         
-        //TODO : 기본 채팅방 참여자 생성해야함
-
+        // 기본 채팅방 참여자 생성
+        ChatUser defaultChatUser = new ChatUser();
+        defaultChatUser.setUser(user);
+        defaultChatUser.setChatRoom(defaultChatRoom);
+        chatUserRepository.save(defaultChatUser);
 
         return ResponseEntity.ok("프로젝트 생성 성공");
     }
@@ -152,13 +160,26 @@ public class ProjectController {
         }
 
         // TODO :  프로젝트 권한 확인 (예: 관리자 권한)
-
+        
 
         ProjectUser newProjectUser = new ProjectUser();
         newProjectUser.setUser(invitee.get());
         newProjectUser.setProject(project.get());
         newProjectUser.setUserRole("member"); // 기본 역할로 설정
         projectUserRepository.save(newProjectUser);
+        
+        //프로젝트의 기본 채팅방 가져오기
+        Optional<ChatRoom> defaultChatRoom = chatRoomService.findChatRoomById(project.get().getId());
+        if (defaultChatRoom.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("기본 채팅방을 찾을 수 없습니다.");
+        }
+
+        //프로젝트의 기본 채팅방에 유저 추가
+        ChatUser inviteChatUser = new ChatUser();
+        inviteChatUser.setUser(invitee.get());
+        inviteChatUser.setChatRoom(defaultChatRoom.get());
+        chatUserRepository.save(inviteChatUser);
+
 
         return ResponseEntity.ok("초대 성공");
     }
