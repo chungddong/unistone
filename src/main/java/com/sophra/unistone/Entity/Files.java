@@ -35,6 +35,10 @@ public class Files {
     @JoinColumn(name = "user_id", nullable = false)
     private Users user; // 사용자와 연결
 
+    @ManyToOne
+    @JoinColumn(name = "project_id", nullable = false)
+    private Project project; // Project와의 관계 정의
+
     public enum FileType {
         FILE, LINK
     }
