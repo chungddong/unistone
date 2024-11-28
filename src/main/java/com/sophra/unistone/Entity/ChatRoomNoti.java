@@ -6,26 +6,27 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Table(name = "ChatUser")
+import java.time.LocalDateTime;
+
+@Table(name = "ChatRoomNoti")
 @Entity
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ChatUser {
-    
-    // 채팅방 참여 유저
+public class ChatRoomNoti { //채팅방 공지
 
     @Id
     @GeneratedValue
-    private Long id;
+    private Long id; //공지 번호
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private Users user;
+    private String notiTitle; // 공지 제목
+
+    private String notiContent; //공지 내용
 
     @ManyToOne
     @JoinColumn(name = "chatroom_id", nullable = false)
-    private ChatRoom chatRoom;
+    private ChatRoom chatRoom; // 채팅방과 연결
+
 
 }

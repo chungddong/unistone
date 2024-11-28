@@ -1,22 +1,22 @@
 package com.sophra.unistone.Controller;
 
 import com.sophra.unistone.Entity.*;
-import com.sophra.unistone.Repository.ChatRepository;
-import com.sophra.unistone.Repository.ChatRoomRepository;
-import com.sophra.unistone.Repository.ChatUserRepository;
-import com.sophra.unistone.Repository.ProjectRepository;
+import com.sophra.unistone.Repository.*;
+import com.sophra.unistone.Service.ChatRoomNotiService;
 import com.sophra.unistone.Service.ChatRoomService;
 import com.sophra.unistone.Service.ChatService;
 import com.sophra.unistone.Service.ChatUserService;
 import com.sophra.unistone.UserCheck;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -43,6 +43,10 @@ public class ChatController {
     private ChatUserRepository chatUserRepository;
     @Autowired
     private ChatUserService chatUserService;
+    @Autowired
+    private ChatRoomNotiRepository chatRoomNotiRepository;
+    @Autowired
+    private ChatRoomNotiService chatRoomNotiService;
 
     //메시지 전송 요청
     @MessageMapping("/send")
@@ -126,10 +130,43 @@ public class ChatController {
 
 
     //채팅방 공지 생성
+    @PostMapping("/api/chatroom/notice")
+    public ResponseEntity<?> createChatRoomNoti(@RequestBody ChatRoomNoti chatRoomNoti, HttpSession session) {
 
+        // 유저 확인
+        Users user = userCheck.validateLoggedInUser(session);
+
+        // 채팅방 존재 여부 확인
+        ChatRoom chatRoom = chatRoomNoti.getChatRoom();
+        if (chatRoom == null || chatRoomRepository.findById(chatRoom.getId()).isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("채팅방을 찾을 수 없습니다.");
+        }
+
+        // 공지 저장
+        chatRoomNotiRepository.save(chatRoomNoti);
+
+        return ResponseEntity.ok("공지 생성 성공");
+    }
 
     //채팅방 공지 가져오기
+    @GetMapping("/api/{chatRoomId}/notices")
+    public ResponseEntity<?> getNoticesByChatRoom(@PathVariable Long chatRoomId) {
+        List<ChatRoomNoti> notices = chatRoomNotiService.getNoticesByChatRoomId(chatRoomId);
 
+        if (notices.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("공지사항이 없습니다.");
+        }
+
+        // 공지 제목과 내용만 추출해서 전달
+        List<Map<String, Object>> response = notices.stream().map(noti -> {
+            Map<String, Object> notiMap = new HashMap<>();
+            notiMap.put("title", noti.getNotiTitle());
+            notiMap.put("content", noti.getNotiContent());
+            return notiMap;
+        }).toList();
+
+        return ResponseEntity.ok(response);
+    }
     
     
 

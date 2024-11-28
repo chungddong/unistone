@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
+@Table(name = "Chat")
 @Entity
 @Getter
 @Setter
