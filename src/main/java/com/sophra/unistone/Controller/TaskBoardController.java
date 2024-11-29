@@ -1,27 +1,21 @@
 package com.sophra.unistone.Controller;
 
 import com.sophra.unistone.DTO.TaskBoardDTO;
-import com.sophra.unistone.Entity.Project;
-import com.sophra.unistone.Entity.TaskBoard;
-import com.sophra.unistone.Entity.TaskBoardStatus;
-import com.sophra.unistone.Entity.Users;
+import com.sophra.unistone.Entity.*;
 import com.sophra.unistone.Repository.TaskBoardRepository;
 import com.sophra.unistone.Repository.TaskBoardStatusRepository;
-import com.sophra.unistone.Service.ProjectService;
-import com.sophra.unistone.Service.TaskBoardService;
-import com.sophra.unistone.Service.TaskBoardStatusService;
-import com.sophra.unistone.Service.UsersService;
+import com.sophra.unistone.Repository.TaskBoardUserRepository;
+import com.sophra.unistone.Repository.UsersRepository;
+import com.sophra.unistone.Service.*;
 import com.sophra.unistone.UserCheck;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.config.Task;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -49,6 +43,12 @@ public class TaskBoardController {
     UserCheck userCheck;
     @Autowired
     private TaskBoardStatusService taskBoardStatusService;
+    @Autowired
+    private UsersRepository usersRepository;
+    @Autowired
+    private TaskBoardUserRepository taskBoardUserRepository;
+    @Autowired
+    private TaskBoardUserService taskBoardUserService;
 
 
     // 작업보드 분류 생성 요청
@@ -124,26 +124,64 @@ public class TaskBoardController {
         // 새로운 작업보드 추가
         taskBoardRepository.save(selectTaskBoard);
         
-        // TODO : 작업보드 사용자 추가 코드 필요함
+        // 작업보드 사용자 추가 코드 필요함
+        List<Long> userIds = taskBoardDTO.getUserIds(); //유저 아이디 목록
+
+        for(int i =0; i < userIds.size(); i++) {
+            Optional<Users> users = usersRepository.findById(userIds.get(i));
+
+            // 작업보드 유저 추가
+            TaskBoardUser taskBoardUser = new TaskBoardUser();
+            taskBoardUser.setProject(selectProject.get());
+            taskBoardUser.setUser(users.get());
+
+            // 작업보드 유저 저장
+            taskBoardUserRepository.save(taskBoardUser);
+
+        }
+
+        
 
         return ResponseEntity.ok("작업 보드 추가 성공");
     }
 
 
     // 작업보드 리스트 가져오기
-    @PostMapping("/api/taskboard/list")
-    public ResponseEntity<?> ListTaskBoard(@RequestBody Map<String, Long> requestBody, HttpSession session) {
+    @GetMapping("/api/taskboard/{taskBoardStatusId}")
+    public ResponseEntity<?> ListTaskBoard(@PathVariable("taskBoardStatusId") String taskBoardStatusId, HttpSession session) {
         // 유저 확인
         Users user = userCheck.validateLoggedInUser(session);
 
-        //작업보드 ID 가져오기
-        Long taskBoardStatusID = requestBody.get("taskBoardStatusID");
+        //작업보드 분류 ID 가져오기
+        Long taskBoardStatusID = Long.valueOf(taskBoardStatusId);
 
         // 작업보드 분류 id 로 모든 작업보드 가져오기
         List<TaskBoard> selectStatusBoards = taskBoardService.getTaskBoardsByStatusId(taskBoardStatusID);
-        
 
-        return ResponseEntity.ok(selectStatusBoards);
+        // 작업보드와 관련된 유저 목록도 같이 반환
+        List<Map<String, Object>> response = selectStatusBoards.stream().map(taskBoard -> {
+            Map<String, Object> taskBoardData = new HashMap<>();
+            taskBoardData.put("id", taskBoard.getId());
+            taskBoardData.put("taskName", taskBoard.getTaskName());
+            taskBoardData.put("taskContent", taskBoard.getTaskContent());
+            taskBoardData.put("startDate", taskBoard.getStartDate());
+            taskBoardData.put("endDate", taskBoard.getEndDate());
+
+            // 관련된 사용자 가져오기
+            List<TaskBoardUser> taskBoardUsers = taskBoardUserService.getUsersByProjectId(taskBoard.getTaskBoardStatus().getId());
+            List<Map<String, Object>> usersData = taskBoardUsers.stream().map(taskBoardUser -> {
+                Map<String, Object> userData = new HashMap<>();
+                userData.put("userId", taskBoardUser.getUser().getId());
+                userData.put("userName", taskBoardUser.getUser().getUserName());
+                return userData;
+            }).toList();
+
+            taskBoardData.put("users", usersData);
+            return taskBoardData;
+        }).toList();
+
+        return ResponseEntity.ok(response);
+
     }
 
 
