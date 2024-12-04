@@ -1,0 +1,90 @@
+
+.App {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    width: 100%;
+}
+
+.App > div {
+    flex: 1;
+    height: 100%;
+}
+
+.LeftBox {
+    background-color: #57B6B2;
+    height: 100%;
+}
+
+.RightBox {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.SignBox {
+    width: 55%;
+}
+
+.SignTitle {
+    font-weight: bold;
+    font-size: 25px;
+}
+
+.SignSubTitle {
+    margin-top: 10px;
+    color: #64748B;
+}
+
+.SignInputBox {
+    width: 100%;
+    height: 50px;
+    margin-top: 20px;
+    border: 1px solid #E2E8F0;
+    border-radius: 15px;
+
+    display: flex;
+    flex-direction: row;
+    box-sizing: border-box;
+    padding: 5px;
+}
+
+.InputBoxIcon {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #64748B;
+}
+
+.SignInput {
+    flex: 8;
+    border: 0;
+}
+
+.InputEndIcon {
+    flex: 1;
+}
+
+.SignForm > button {
+    width: 100%;
+    height: 50px;
+    border: 0;
+    margin-top: 20px;
+    border-radius: 15px;
+    background-color: #57B6B2;
+    color: white;
+    font-weight: bold;
+}
+
+.SignEtcLink {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin-top: 80px;
+}
+
+
