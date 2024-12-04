@@ -3,9 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import "../css/LoginPage.css";
 import { MdOutlineMailOutline } from "react-icons/md";
 import { MdOutlinePassword } from "react-icons/md";
+import { FaUser } from "react-icons/fa6";
 import axios from "axios";
 
 function LoginPage() {
+    const [userName, setUserName] = useState('');
     const [userEmail, setUserEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
@@ -14,20 +16,20 @@ function LoginPage() {
         e.preventDefault();
 
         //서버로 로그인 POST 요청
-        axios.post('/api/login', {
+        axios.post('/api/SignUp', {
+            username : userName,
             email: userEmail,
             passwd: password
         },{withCredentials : true})
             .then((response) => {
                 if (response.data === "Confirm") {
-                    console.log('로그인 성공 :', response.data);
+                    console.log('회원가입 성공 :', response.data);
 
-                    window.location.href = '/Main';
+                    window.location.href = '/';
                 }
             })
             .catch((error) => {
-                console.error('로그인 에러 :', error);
-                // 로그인 실패 처리
+                console.error('회원가입 에러 :', error);
             });
     };
 
@@ -61,19 +63,19 @@ function LoginPage() {
 
                 <div className="SignBox">
 
-                    <div className="SignTitle">로그인</div>
-                    <div className="SignSubTitle">돌아오신 것을 환영합니다! 로그인을 위해서 입력해주세요</div>
+                    <div className="SignTitle">회원가입</div>
+                    <div className="SignSubTitle"></div>
 
                     <form className="SignForm" onSubmit={handleLogin}>
 
                         <div className="SignInputBox">
                             <div className="InputBoxIcon">
 
-                                <MdOutlineMailOutline size={20} />
+                                <FaUser size={15}/>
 
                             </div>
-                            <input type={"text"} className="SignInput" id="UserName" placeholder="이메일"
-                                   value={userEmail}
+                            <input type={"text"} className="SignInput" id="UserName" placeholder="유저명"
+                                   value={userName}
                                    onChange={(e) => setUserEmail(e.target.value)}/>
                             <div className="InputEndIcon">
 
@@ -83,7 +85,21 @@ function LoginPage() {
                         <div className="SignInputBox">
                             <div className="InputBoxIcon">
 
-                                <MdOutlinePassword size={20} />
+                                <MdOutlineMailOutline size={20}/>
+
+                            </div>
+                            <input type={"email"} className="SignInput" id="UserName" placeholder="이메일"
+                                   value={userEmail}
+                                   onChange={(e) => setPassword(e.target.value)}/>
+                            <div className="InputEndIcon">
+
+                            </div>
+                        </div>
+
+                        <div className="SignInputBox">
+                            <div className="InputBoxIcon">
+
+                                <MdOutlinePassword size={20}/>
 
                             </div>
                             <input type={"password"} className="SignInput" id="UserName" placeholder="비밀번호"
@@ -94,11 +110,25 @@ function LoginPage() {
                             </div>
                         </div>
 
-                        <button type={"submit"} name="SignIn">로그인</button>
+                        <div className="SignInputBox">
+                            <div className="InputBoxIcon">
+
+                                <MdOutlinePassword size={20}/>
+
+                            </div>
+                            <input type={"password"} className="SignInput" id="UserName" placeholder="비밀번호 확인"
+                                   value={password}
+                                   onChange={(e) => setPassword(e.target.value)}/>
+                            <div className="InputEndIcon">
+
+                            </div>
+                        </div>
+
+                        <button type={"submit"} name="SignIn">회원가입</button>
 
                     </form>
 
-                    <div className="SignEtcLink">계정이 없으신가요? &nbsp; <a href={"/SignUp"}>회원가입</a></div>
+                    <div className="SignEtcLink">이미 가입하셨나요? &nbsp; <a href={"/"}>로그인</a></div>
 
                 </div>
 
