@@ -16,8 +16,8 @@ function LoginPage() {
         e.preventDefault();
 
         //서버로 로그인 POST 요청
-        axios.post('/api/SignUp', {
-            username : userName,
+        axios.post('/api/signup', {
+            userName : userName,
             email: userEmail,
             passwd: password
         },{withCredentials : true})
@@ -76,7 +76,7 @@ function LoginPage() {
                             </div>
                             <input type={"text"} className="SignInput" id="UserName" placeholder="유저명"
                                    value={userName}
-                                   onChange={(e) => setUserEmail(e.target.value)}/>
+                                   onChange={(e) => setUserName(e.target.value)}/>
                             <div className="InputEndIcon">
 
                             </div>
@@ -90,7 +90,7 @@ function LoginPage() {
                             </div>
                             <input type={"email"} className="SignInput" id="UserName" placeholder="이메일"
                                    value={userEmail}
-                                   onChange={(e) => setPassword(e.target.value)}/>
+                                   onChange={(e) => setUserEmail(e.target.value)}/>
                             <div className="InputEndIcon">
 
                             </div>
