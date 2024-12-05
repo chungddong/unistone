@@ -31,7 +31,7 @@ public class testController {
 
     // 회원가입 요청 처리
     @PostMapping("/api/signup")
-    public ResponseEntity<?> registerUser(@Validated @RequestBody Users user, BindingResult bindingResult) {
+    public ResponseEntity<?> registerUser(@RequestBody Users user, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
@@ -44,7 +44,9 @@ public class testController {
 
         // 회원가입 처리
         Users registeredUser = usersService.registerUser(user);
-        return ResponseEntity.ok(registeredUser);
+
+
+        return ResponseEntity.ok("Confirm");
 
     }
 
@@ -54,7 +56,11 @@ public class testController {
 
         if (usersService.confirmUser(loginUser)) {
             session.setAttribute("user", loginUser); //세션설정
-            return ResponseEntity.ok("로그인 승인" + "session : " + session.getId());
+
+            System.out.println("로그인 완료");
+
+
+            return ResponseEntity.ok("Confirm");
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("이메일 또는 비밀번호 오류");
         }
