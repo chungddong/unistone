@@ -31,7 +31,7 @@ public class testController {
 
     // 회원가입 요청 처리
     @PostMapping("/api/signup")
-    public ResponseEntity<?> registerUser(@Validated @RequestBody Users user, BindingResult bindingResult) {
+    public ResponseEntity<?> registerUser(@RequestBody Users user, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
@@ -46,7 +46,7 @@ public class testController {
         Users registeredUser = usersService.registerUser(user);
 
 
-        return ResponseEntity.ok(registeredUser);
+        return ResponseEntity.ok("Confirm");
 
     }
 
