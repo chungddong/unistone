@@ -1,0 +1,109 @@
+/* 전체 컨테이너 */
+.container {
+  display: grid;
+  grid-template-columns: 96px 1fr; 
+  grid-template-rows: 88px 1fr; 
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* 사이드바 */
+.sidebar {
+  grid-row: 1 / span 2;
+  grid-column: 1 / 2;
+  background-color: white;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); 
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 10px 0;
+  position: relative;
+  height: 100%;
+}
+
+/* 로고 */
+.logo {
+  position: absolute; 
+  top: 0; 
+  left: 0;
+  width: 96px;
+  height: 88px; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-image {
+  width: 30px;
+  height: 30px;
+  border-radius: 20%;
+}
+
+/* 구분선 */
+.divider {
+  position: absolute;
+  top: 88px; 
+  width: 100%;
+  height: 0.5px;
+  background-color: #bdc3c7;
+}
+
+/* 헤더 */
+.header {
+  grid-row: 1 / 2;
+  grid-column: 2 / 3;
+  background-color: white;
+  color: #2c3e50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+}
+
+.header-left {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* 사용자 이름과 화살표 이미지 간격 추가 */
+}
+
+.user-image {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+}
+
+.user-name {
+  font-size: 14px;
+  color: #2c3e50;
+  margin-right: 30px;
+}
+
+.dropdown-arrow {
+  width: 16px;
+  height: 16px;
+}
+
+/* 메인 화면 */
+.content {
+  grid-row: 2 / 3;
+  grid-column: 2 / 3;
+  background-color: #fff;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #2c3e50;
+}
+
+.center-message {
+  font-size: 16px;
+  font-weight: 400;
+}

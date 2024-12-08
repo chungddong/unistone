@@ -1,0 +1,63 @@
+.Header {
+    width: 100%;
+    height: 70px;
+    background-color: white;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    box-sizing: border-box;
+
+}
+
+.LogoBox {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-left: 30px;
+}
+
+.LogoBox:hover {
+    cursor: pointer;
+}
+
+
+.UserBox {
+    height: 80%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-right: 20px;
+    border-radius: 10px;
+}
+
+.UserBox:hover {
+    background-color: #ebebeb;
+    cursor: pointer;
+}
+
+.UserIcon {
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-left: 15px;
+}
+
+.UserName {
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-left: 10px;
+}
+
+.EtcIcon {
+    margin-left: 45px;
+    margin-right: 15px;
+}

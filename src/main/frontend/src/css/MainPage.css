@@ -1,0 +1,30 @@
+.MainPage {
+    width: 100%;
+    height: 100%;
+
+    background-color: #686868;
+    /* F8FAFC 이 색으로 배경색 넣기*/
+
+    display: flex;
+    flex-direction: column;
+
+}
+
+.PageBox {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: row;
+}
+
+.ViewBox {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    padding: 20px;
+}
+

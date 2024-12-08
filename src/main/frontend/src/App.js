@@ -6,6 +6,7 @@ import './App.css';
 import LoginPage from './Page/LoginPage';
 import MainPage from './Page/MainPage';
 import SignUpPage from "./Page/SignUpPage";
+import Layout from "./Page/Layout";
 
 function App() {
 
@@ -16,6 +17,7 @@ function App() {
                 <Route path="/" element={<LoginPage />} />
                 <Route path="/SignUp" element={<SignUpPage />} />
                 <Route path="/main" element={<MainPage />} />
+                <Route path="/layout" element={<Layout />} />
             </Routes>
         </Router>
     );
