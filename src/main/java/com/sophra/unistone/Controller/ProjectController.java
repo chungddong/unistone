@@ -58,7 +58,9 @@ public class ProjectController {
     public ResponseEntity<?> CreateProject(@RequestBody Project pjQuery, HttpSession session) {
 
         // 유저 확인
-        Users user = userCheck.validateLoggedInUser(session);
+        Users usera = (Users)session.getAttribute("user");
+        Optional<Users> user = usersService.findbyEmail(usera.getEmail());
+
 
         // 새로운 프로젝트 생성
         Project newProject = new Project();
@@ -72,7 +74,7 @@ public class ProjectController {
 
         // 프로젝트 참가자 유저 저장 - 생성한 사람은 관리자
         ProjectUser projectUser = new ProjectUser();
-        projectUser.setUser(user); // 참가자 유저 정보 연결
+        projectUser.setUser(user.get()); // 참가자 유저 정보 연결
         projectUser.setProject(newProject); // 참가자 프로젝트 정보 연결
         projectUser.setUserRole("Manager"); // 관리자 역할 부여
 
@@ -84,14 +86,14 @@ public class ProjectController {
         defaultChatRoom.setProject(newProject);
         defaultChatRoom.setName("전체 채팅방");
         chatRoomRepository.save(defaultChatRoom);
-        
+
         // 기본 채팅방 참여자 생성
         ChatUser defaultChatUser = new ChatUser();
-        defaultChatUser.setUser(user);
+        defaultChatUser.setUser(user.get());
         defaultChatUser.setChatRoom(defaultChatRoom);
         chatUserRepository.save(defaultChatUser);
 
-        return ResponseEntity.ok("프로젝트 생성 성공");
+        return ResponseEntity.ok("Confirm");
     }
 
 
@@ -100,10 +102,11 @@ public class ProjectController {
     public ResponseEntity<?> ListProject(HttpSession session) {
 
         // 유저 확인
-        Users user = userCheck.validateLoggedInUser(session);
+        Users usera = (Users)session.getAttribute("user");
+        Optional<Users> user = usersService.findbyEmail(usera.getEmail());
 
         // 유저의 모든 프로젝트 리스트 반환
-        List<Project> userProjects = projectUserService.findAllProjectsByUser(user);
+        List<Project> userProjects = projectUserService.findAllProjectsByUser(user.get());
 
 
         return ResponseEntity.ok(userProjects);
@@ -114,7 +117,8 @@ public class ProjectController {
     public ResponseEntity<?> InfoProject(@RequestBody Map<String, Long> requestBody, HttpSession session) {
 
         // 유저 확인
-        Users user = userCheck.validateLoggedInUser(session);
+        Users usera = (Users)session.getAttribute("user");
+        Optional<Users> user = usersService.findbyEmail(usera.getEmail());
 
         // 요청된 프로젝트 ID 확인
         Long projectId = requestBody.get("projectId");

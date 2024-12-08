@@ -2,6 +2,7 @@ import React from 'react';
 import Header from "../component/Header";
 import "../css/MainPage.css"
 import ProjectBar from "../component/ProjectBar";
+import Project from "./Project";
 
 function MainPage() {
     return (
@@ -10,6 +11,8 @@ function MainPage() {
             <div className="PageBox">
                 <ProjectBar/>
                 <div className="ViewBox">
+
+                    <Project/>
 
                 </div>
             </div>
