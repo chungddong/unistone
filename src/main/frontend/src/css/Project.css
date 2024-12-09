@@ -18,11 +18,18 @@
   position: relative;
   height: 100%;
 
+  overflow-y: auto;
+
   border-left: 1px solid #F1F5F9;
 }
 
 .project-info {
-  margin-bottom: 30px;
+  margin-bottom: 10px;
+  width: 200px;
+}
+
+.project-info .description {
+  margin-top: 20px;
 }
   
 .project-sidebar .project-title {
@@ -73,7 +80,7 @@
 
 .project-user {
   margin-top: auto;
-  margin-bottom: auto;
+  margin-bottom: 30px;
 }
 
 .userp {

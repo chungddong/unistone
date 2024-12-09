@@ -193,8 +193,6 @@ public class ProjectController {
     @PostMapping("/api/project/users")
     public ResponseEntity<?> ListProjectUser(@RequestBody Map<String, Long> requestBody, HttpSession session) {
 
-        // 유저 확인
-        Users user = userCheck.validateLoggedInUser(session);
 
         // 요청된 프로젝트 ID 확인
         Long projectId = requestBody.get("projectId");
@@ -214,6 +212,7 @@ public class ProjectController {
         // 모든 참가자 리스트 가져오기
         List<String> allProjectUserNames = projectUserService.findAllUserNameByProject(selectProject.get());
 
+        System.out.println(allProjectUserNames);
 
         return ResponseEntity.ok(allProjectUserNames);
     }

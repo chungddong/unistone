@@ -1,6 +1,10 @@
-import "../css/FilePage.css"
+import React, { useState } from "react";
+import "../css/FilePage.css";
+import { MdAdd } from "react-icons/md";
+import FileModal from "../component/FileModal";
 
 function FilePage() {
+    const [isModalOpen, setIsModalOpen] = useState(false); // 모달 열림 상태 관리
 
     const data = {
         files: [
@@ -49,9 +53,13 @@ function FilePage() {
         <div className="uploadSection">
             <div className="sectoionBar">
                 <div className="sectionTitle">{title}</div>
-                <button className="uploadButton">업로드</button>
+                <div
+                    className="uploadButton"
+                    onClick={() => setIsModalOpen(true)} // 모달 열기
+                >
+                    <MdAdd size={20} />
+                </div>
             </div>
-
             {items.map((item) => (
                 <UploadItem key={item.id} {...item} />
             ))}
@@ -88,15 +96,17 @@ function FilePage() {
         </div>
     );
 
-
     return (
         <div className="upload-page">
             <UploadSection title="업로드된 파일" items={data.files} />
             <UploadSection title="업로드된 링크" items={data.links} />
+            {isModalOpen && (
+                <FileModal
+                    onClose={() => setIsModalOpen(false)} // 모달 닫기
+                />
+            )}
         </div>
     );
-
-
 }
 
 export default FilePage;

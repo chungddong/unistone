@@ -2,11 +2,13 @@ import '../css/Header.css'
 import { BsPersonCircle } from "react-icons/bs";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import {useEffect, useState} from "react";
-import axios from "axios";
+import useUserStore from "../store";
 
 function Header() {
 
     const [userview, setUserview] = useState(false);
+    const userName = useUserStore((state) => state.userName);
+
 
     const handleLogoClick = () => {
         window.location.href = "/"; // '/' 경로로 이동
@@ -45,7 +47,7 @@ function Header() {
 
                 </div>
 
-                <div className="UserName">홍길동</div>
+                <div className="UserName">{userName} 님</div>
 
                 <div className="EtcIcon">
 

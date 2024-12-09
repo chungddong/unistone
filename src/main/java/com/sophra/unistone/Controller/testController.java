@@ -15,6 +15,9 @@ import com.sophra.unistone.Service.UsersService;
 
 import jakarta.servlet.http.HttpSession;
 
+import java.util.Map;
+import java.util.Optional;
+
 @RestController
 public class testController {
 
@@ -55,17 +58,23 @@ public class testController {
     public ResponseEntity<?> loginUser(@RequestBody Users loginUser, HttpSession session) {
 
         if (usersService.confirmUser(loginUser)) {
-            session.setAttribute("user", loginUser); //세션설정
+            session.setAttribute("user", loginUser); // 세션 설정
+
+            Optional<Users> user = usersService.findbyEmail(loginUser.getEmail());
+
+            String userName = user.get().getUserName().toString(); // 이메일로 사용자 이름 가져오기
+
+            System.out.println("UserName: " + userName);
 
             System.out.println("로그인 완료");
 
-
-            return ResponseEntity.ok("Confirm");
+            // 사용자 이름도 포함하여 반환
+            return ResponseEntity.ok(Map.of("status", "Confirm", "userName", userName));
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("이메일 또는 비밀번호 오류");
         }
-
     }
+
 
     // 로그아웃 요청
     @GetMapping("/api/logout")

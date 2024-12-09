@@ -55,6 +55,8 @@ public class FileController {
                                         @RequestParam("projectId") Long projectId,
                                         HttpSession session) {
 
+        System.out.println(link);
+
         // 유저 확인
         Users user = userCheck.validateLoggedInUser(session);
 

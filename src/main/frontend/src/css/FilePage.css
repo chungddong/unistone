@@ -23,12 +23,19 @@
 }
 
 .uploadButton {
-    width: 80px;
-    height: 30px;
-    background-color: rgb(146, 146, 146);
     border: 0px;
     border-radius: 5px;
+    padding: 2px;
     /* 업로드 버튼 */
+    display: flex;
+    align-items: center;
+    color: #94A3B8;
+
+}
+
+.uploadButton:hover {
+    background-color: #d1d1d1;
+    cursor: pointer;
 }
 
 .sectionTitle {
@@ -40,10 +47,11 @@
 .uploadItem {
     display: flex;
     align-items: center;
-    margin-bottom: 16px;
+    margin-bottom: 20px;
     padding: 15px;
     background-color: white;
     border-radius: 10px;
+    box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.1);
 
     /* 각 분류 업로드 아이템  */
 }
@@ -51,7 +59,7 @@
 .uploadType {
     width: 60px;
     font-weight: bold;
-    color: #38bdf8;
+    color: #57B6B2;
 
     /* 업로드 아이템 파일 타입 표시 */
 }

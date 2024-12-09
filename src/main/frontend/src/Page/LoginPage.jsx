@@ -4,29 +4,37 @@ import "../css/LoginPage.css";
 import { MdOutlineMailOutline } from "react-icons/md";
 import { MdOutlinePassword } from "react-icons/md";
 import axios from "axios";
+import useUserStore from "../store"; // Zustand Store import
 
 function LoginPage() {
     const [userEmail, setUserEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
 
+    const { userName, setUserName } = useUserStore();
+
+
     const handleLogin = (e) => {
         e.preventDefault();
 
-        //서버로 로그인 POST 요청
+        // 서버로 로그인 POST 요청
         axios.post('/api/login', {
             email: userEmail,
             passwd: password
-        },{withCredentials : true})
+        }, { withCredentials: true })
             .then((response) => {
-                if (response.data === "Confirm") {
-                    console.log('로그인 성공 :', response.data);
+                if (response.data.status === "Confirm") {
+                    console.log('로그인 성공:', response.data);
 
-                    window.location.href = '/Main';
+                    // Zustand에 사용자 이름 저장
+                    setUserName(response.data.userName);
+
+                    // 페이지 이동
+                    navigate('/Main');
                 }
             })
             .catch((error) => {
-                console.error('로그인 에러 :', error);
+                console.error('로그인 에러:', error);
                 // 로그인 실패 처리
             });
     };
