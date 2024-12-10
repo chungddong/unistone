@@ -80,6 +80,8 @@ function ProjectBar() {
             const response = await axios.post("/api/project/info", {projectId: id});
             setSelectedProject(response.data); // 상태 업데이트
 
+
+            console.log(response.data);
             const userResponse = await axios.post("/api/project/users", {projectId: id});
             setUserList(userResponse.data);
 

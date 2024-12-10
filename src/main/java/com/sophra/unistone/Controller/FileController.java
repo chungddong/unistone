@@ -5,6 +5,7 @@ import com.sophra.unistone.Entity.Files;
 import com.sophra.unistone.Entity.Users;
 import com.sophra.unistone.Repository.FilesRepository;
 import com.sophra.unistone.Service.FilesService;
+import com.sophra.unistone.Service.UsersService;
 import com.sophra.unistone.UserCheck;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import java.io.File;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 public class FileController {
@@ -30,6 +32,8 @@ public class FileController {
     UserCheck userCheck;
     @Autowired
     private FilesService filesService;
+    @Autowired
+    private UsersService usersService;
 
     // 파일 업로드 요청
     @PostMapping("/api/files/create/file")
@@ -40,10 +44,12 @@ public class FileController {
                                         HttpSession session) {
 
         // 유저 확인
-        Users user = userCheck.validateLoggedInUser(session);
+        Users usera = (Users)session.getAttribute("user");
+        Optional<Users> user = usersService.findbyEmail(usera.getEmail());
+
 
         // 새로운 파일 저장
-        Files savedFile = filesService.saveFile(file, title, description, user, projectId);
+        Files savedFile = filesService.saveFile(file, title, description, user.get(), projectId);
         return ResponseEntity.ok("저장 완료");
     }
 
@@ -52,16 +58,19 @@ public class FileController {
     public ResponseEntity<?> createLink(@RequestParam("link") String link,
                                         @RequestParam("title") String title,
                                         @RequestParam("description") String description,
-                                        @RequestParam("projectId") Long projectId,
+                                        @RequestParam("projectId") String projectId,
                                         HttpSession session) {
 
         System.out.println(link);
 
+
         // 유저 확인
-        Users user = userCheck.validateLoggedInUser(session);
+        Users usera = (Users)session.getAttribute("user");
+        Optional<Users> user = usersService.findbyEmail(usera.getEmail());
+
 
         // 새로운 링크 저장
-        Files savedLink = filesService.saveLink(link, title, description, user, projectId);
+        Files savedLink = filesService.saveLink(link, title, description, user.get(), Long.valueOf(projectId));
         return ResponseEntity.ok("저장 완료");
     }
 
@@ -70,12 +79,13 @@ public class FileController {
     public ResponseEntity<?> getFileList(@RequestBody Map<String, Long> request, HttpSession session) {
 
         // 유저 확인
-        Users user = userCheck.validateLoggedInUser(session);
+        Users usera = (Users)session.getAttribute("user");
+        Optional<Users> user = usersService.findbyEmail(usera.getEmail());
 
         Long projectId = request.get("projectId");
 
         // projectId에 해당하는 파일과 링크 목록 가져오기
-        Map<String, List<FilesDTO>> fileList = filesService.getFilesAndLinksByProjectId(projectId, user);
+        Map<String, List<FilesDTO>> fileList = filesService.getFilesAndLinksByProjectId(projectId, user.get());
 
         return ResponseEntity.ok(fileList);
     }

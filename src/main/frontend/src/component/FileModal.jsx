@@ -1,9 +1,14 @@
 import React, { useState } from "react";
 import axios from "axios";
+import useProjectStore from "../store";
+
 
 function FileModal({ onClose, projectId }) {
     const [items, setItems] = useState([]); // 드래그/붙여넣기 항목 관리
     const [error, setError] = useState(null); // 에러 메시지 관리
+
+    const selectedProject = useProjectStore((state) => state.selectedProject);
+
 
     // 클립보드 붙여넣기 이벤트 처리
     const handlePaste = (event) => {
@@ -27,6 +32,9 @@ function FileModal({ onClose, projectId }) {
     const handleCreate = async () => {
         setError(null); // 이전 에러 초기화
 
+        console.log("업로드 요청");
+        console.log(selectedProject.id + "가 아이디임");
+
         try {
             for (const item of items) {
                 if (item.type === "file") {
@@ -35,19 +43,20 @@ function FileModal({ onClose, projectId }) {
                     formData.append("file", item.value);
                     formData.append("title", "Uploaded File");
                     formData.append("description", "File uploaded via React");
-                    formData.append("projectId", projectId);
+                    formData.append("projectId", selectedProject.id);
 
                     await axios.post("/api/files/create/file", formData, {
                         headers: { "Content-Type": "multipart/form-data" },
                     });
                 } else if (item.type === "link") {
+
                     // 링크 업로드 요청
                     await axios.post("/api/files/create/link",
                         new URLSearchParams({
                             link: item.value,  // 실제 link 값 전달
                             title: "Uploaded Link",
                             description: "Link uploaded via React",
-                            projectId: projectId,
+                            projectId: selectedProject.id,
                         }), {
                             headers: { "Content-Type": "application/x-www-form-urlencoded" }
                         }
@@ -98,7 +107,7 @@ function FileModal({ onClose, projectId }) {
                         취소
                     </button>
                     <button className="create-button" onClick={handleCreate}>
-                        생성하기
+                        업로드
                     </button>
                 </div>
             </div>

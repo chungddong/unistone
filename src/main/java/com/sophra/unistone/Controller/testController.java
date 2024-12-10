@@ -66,7 +66,7 @@ public class testController {
 
             System.out.println("UserName: " + userName);
 
-            System.out.println("로그인 완료");
+            System.out.println("로그인 완료" + session.getId());
 
             // 사용자 이름도 포함하여 반환
             return ResponseEntity.ok(Map.of("status", "Confirm", "userName", userName));
