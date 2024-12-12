@@ -1,0 +1,70 @@
+.task-board {
+    display: flex;
+    flex: 1;
+    flex-wrap: nowrap;
+    margin: 28px 24px;
+    gap: 24px;
+    overflow-x: auto;
+}
+
+.column {
+    width: 264px;
+    flex: none;
+    background: none;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+}
+
+.column-header {
+    height: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: 0px;
+}
+
+.column-header label {
+    font-size: 16px;
+    font-weight: bold;
+    margin-left: 8px;
+}
+
+.task-count {
+    font-size: 16px;
+    font-weight: 500;
+    color: #666;
+    margin-left: 2px;
+}
+
+.header-actions {
+    display: flex;
+
+    border: 0px;
+    border-radius: 5px;
+    padding: 2px;
+    /* 업로드 버튼 */
+    display: flex;
+    align-items: center;
+    color: #94A3B8;
+}
+
+.header-actions:hover {
+    background-color: #d1d1d1;
+    cursor: pointer;
+}
+
+.add-icon,
+.more-icon {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+
+.add-icon:hover,
+.more-icon:hover {
+    transform: scale(1.1);
+}
+
+

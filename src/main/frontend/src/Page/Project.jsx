@@ -28,7 +28,7 @@ const Project = ({ onMenuClick }) => {
         return <FilePage />;
       case 'whitePage': // 기본 페이지
       default:
-        return <WhitePage />;
+        return <ChatPage />;
     }
   };
 

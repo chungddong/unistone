@@ -56,7 +56,8 @@ public class TaskBoardController {
     public ResponseEntity<?> CreateTaskBoardStatus(@RequestBody Map<String, String> requestBody, HttpSession session) {
 
         // 유저 확인
-        Users user = userCheck.validateLoggedInUser(session);
+        Users usera = (Users)session.getAttribute("user");
+        Optional<Users> user = usersService.findbyEmail(usera.getEmail());
         String statusName = requestBody.get("statusName");
 
         // 요청된 프로젝트 ID 확인
@@ -88,7 +89,8 @@ public class TaskBoardController {
     public ResponseEntity<?> ListTaskBoardStatus(@RequestBody Map<String, Long> requestBody, HttpSession session) {
 
         // 유저 확인
-        Users user = userCheck.validateLoggedInUser(session);
+        Users usera = (Users)session.getAttribute("user");
+        Optional<Users> user = usersService.findbyEmail(usera.getEmail());
 
         // 요청된 프로젝트 ID 확인
         Long projectId = requestBody.get("projectId");
@@ -108,7 +110,8 @@ public class TaskBoardController {
     public ResponseEntity<?> InfoProject(@RequestBody TaskBoardDTO taskBoardDTO, HttpSession session) {
 
         // 유저 확인
-        Users user = userCheck.validateLoggedInUser(session);
+        Users usera = (Users)session.getAttribute("user");
+        Optional<Users> user = usersService.findbyEmail(usera.getEmail());
 
         // 프로젝트 ID로 특정 프로젝트 조회
         Optional<Project> selectProject = projectService.findProjectById(taskBoardDTO.getProjectId());
@@ -119,7 +122,15 @@ public class TaskBoardController {
         }
 
         // 요청 날린 TaskBoard
-        TaskBoard selectTaskBoard = taskBoardDTO.getTaskBoard();
+        TaskBoard selectTaskBoard = new TaskBoard();
+        selectTaskBoard.setTaskBoardStatus(taskBoardDTO.getTaskBoard().getTaskBoardStatus());
+        selectTaskBoard.setTaskName(taskBoardDTO.getTaskBoard().getTaskName());
+        selectTaskBoard.setTaskContent(taskBoardDTO.getTaskBoard().getTaskContent());
+        selectTaskBoard.setStartDate(taskBoardDTO.getTaskBoard().getStartDate());
+        selectTaskBoard.setEndDate(taskBoardDTO.getTaskBoard().getEndDate());
+
+
+        //TaskBoard selectTaskBoard = taskBoardDTO.getTaskBoard();
 
         // 새로운 작업보드 추가
         taskBoardRepository.save(selectTaskBoard);
@@ -127,7 +138,7 @@ public class TaskBoardController {
         // 작업보드 사용자 추가 코드 필요함
         List<Long> userIds = taskBoardDTO.getUserIds(); //유저 아이디 목록
 
-        for(int i =0; i < userIds.size(); i++) {
+        /*for(int i =0; i < userIds.size(); i++) {
             Optional<Users> users = usersRepository.findById(userIds.get(i));
 
             // 작업보드 유저 추가
@@ -138,7 +149,7 @@ public class TaskBoardController {
             // 작업보드 유저 저장
             taskBoardUserRepository.save(taskBoardUser);
 
-        }
+        }*/
 
         
 
@@ -150,7 +161,8 @@ public class TaskBoardController {
     @GetMapping("/api/taskboard/{taskBoardStatusId}")
     public ResponseEntity<?> ListTaskBoard(@PathVariable("taskBoardStatusId") String taskBoardStatusId, HttpSession session) {
         // 유저 확인
-        Users user = userCheck.validateLoggedInUser(session);
+        Users usera = (Users)session.getAttribute("user");
+        Optional<Users> user = usersService.findbyEmail(usera.getEmail());
 
         //작업보드 분류 ID 가져오기
         Long taskBoardStatusID = Long.valueOf(taskBoardStatusId);

@@ -1,10 +1,7 @@
 package com.sophra.unistone.Controller;
 
 import com.sophra.unistone.Entity.*;
-import com.sophra.unistone.Repository.ChatRoomRepository;
-import com.sophra.unistone.Repository.ChatUserRepository;
-import com.sophra.unistone.Repository.ProjectRepository;
-import com.sophra.unistone.Repository.ProjectUserRepository;
+import com.sophra.unistone.Repository.*;
 import com.sophra.unistone.Service.ChatRoomService;
 import com.sophra.unistone.Service.ProjectService;
 import com.sophra.unistone.Service.ProjectUserService;
@@ -52,6 +49,8 @@ public class ProjectController {
     UserCheck userCheck;
     @Autowired
     private ChatRoomService chatRoomService;
+    @Autowired
+    private TaskBoardStatusRepository taskBoardStatusRepository;
 
     // 프로젝트 생성 요청 처리
     @PostMapping("/api/project/create")
@@ -92,6 +91,20 @@ public class ProjectController {
         defaultChatUser.setUser(user.get());
         defaultChatUser.setChatRoom(defaultChatRoom);
         chatUserRepository.save(defaultChatUser);
+
+        //기본 작업보드 분류 제목들
+        String[] status = {"해야할일", "진행중", "검토중", "완료"};
+
+        for(int i=0; i < status.length; i++) {
+
+            //기본 작업보드 분류 생성
+            TaskBoardStatus taskBoardStatus = new TaskBoardStatus();
+            taskBoardStatus.setProject(newProject);
+            taskBoardStatus.setStatusName(status[i]);
+            taskBoardStatusRepository.save(taskBoardStatus);
+
+        }
+
 
         return ResponseEntity.ok("Confirm");
     }
