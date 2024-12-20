@@ -1,24 +1,25 @@
 import {useEffect, useState} from "react";
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import axios from "axios";
 import './App.css';
 
+import LoginPage from './Page/LoginPage';
+import MainPage from './Page/MainPage';
+import SignUpPage from "./Page/SignUpPage";
+
 function App() {
-  const [hello, setHello] = useState('');
 
-  useEffect(() => {
-      axios.get('/api/test')
-          .then((res) => {
-              setHello(res.data);
-          });
-  }, []);
 
-  return (
-      <div className="App">
-          백엔드 데이터 : {hello} 임니다.
-      </div>
-  );
+    return (
+        <Router>
+            <Routes>
+                <Route path="/" element={<LoginPage />} />
+                <Route path="/SignUp" element={<SignUpPage />} />
+                <Route path="/main" element={<MainPage />} />
+            </Routes>
+        </Router>
+    );
 }
-
 
 
 export default App;
